@@ -1,0 +1,378 @@
+({
+    createProduct : function (component,event) {
+				var action = component.get("c.insertNewProductTable");
+        		var proId20 = component.get("v.newProduct");
+        		console.log('proId = ' + proId20);
+        		action.setParams({productnew: proId20});
+        		action.setCallback(this, function(response){                  
+            		var state = response.getState();
+            		if(state === 'SUCCESS') {
+                    	var campings = component.get("v.product");
+                		campings.push(response.getReturnValue());
+                		component.set('v.paginationList', campings);
+                  		}
+            	    });
+       				var price= component.get("v.newProduct.Price__c")
+        			if(price>=0){
+            			var amount= component.get("v.newProduct.Amount__c");
+        				if(amount=0){
+            				var available=component.set("v.newProduct.Available__c",false);
+        					}
+        				else (amount>0)
+                        	{
+            				var available=component.set("v.newProduct.Available__c",true);
+        					}
+                        var elements = document.getElementsByClassName("new");
+        				elements[0].style.display='none';    
+                    	$A.enqueueAction(action);
+        				//for form
+        				var Items = component.get("v.product");
+        				var Item = component.get("v.newProduct");
+            			Items.unshift(Item);
+        				component.set("v.product",Items);
+         				component.set("v.newProduct",  { 'sobjectType': 'ProductTable__c',
+                        								 'Name': '',
+                        								 'Amount__c': '',
+                        								 'Price__c': 0,
+                        								 'ProductType__c': 0,
+                        								 'ReleaseDate__c': '',
+                        								 'Added Date':'',
+                        								 'Available__c': false });        			
+                    }
+        if(price<0){
+            alert( "Wrong price." ); 
+        }
+	},
+    
+    getorder: function(component, selected) {
+        	 var order=component.get("v.select");
+        	console.log('order = ' + order);
+        	if(order==1){
+            	var action1 = component.get("c.getProductsDESC");
+                var pageSize = component.get("v.pageSize");
+        		console.log('pageSize = ' + pageSize);
+        	 	action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        	}
+        if(order==2){
+            var action1 = component.get("c.getProductsDateASC");
+            var pageSize = component.get("v.pageSize");
+        	console.log('pageSize = ' + pageSize);
+        	action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        }
+        if(order==3){
+            var action1 = component.get("c.getProductsReleaseDESK");
+            var pageSize = component.get("v.pageSize");
+        	console.log('pageSize = ' + pageSize);
+        	action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        }
+        if(order==4){
+            var action1 = component.get("c.getProductsReleaseASK");
+            var pageSize = component.get("v.pageSize");
+        	console.log('pageSize = ' + pageSize);
+        	action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        }
+        if(order===5){
+            var action1 = component.get("c.getProductsNameDESC");
+            var pageSize = component.get("v.pageSize");
+        console.log('pageSize = ' + pageSize);
+        	 action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        }
+        if(order==6){
+           var action1 = component.get("c.getProductsNameASK");
+            var pageSize = component.get("v.pageSize");
+        console.log('pageSize = ' + pageSize);
+        	 action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        }
+        if(order==7){
+           var action1 = component.get("c.getProductsPriceDESK");
+            var pageSize = component.get("v.pageSize");
+        console.log('pageSize = ' + pageSize);
+        	 action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        }
+        if(order==8){
+            var action1 = component.get("c.getProductsPriceASK");
+            var pageSize = component.get("v.pageSize");
+        console.log('pageSize = ' + pageSize);
+        	 action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+        }
+    },
+        	
+        
+    /*getdata: function(component, action1){
+        var pageSize = component.get("v.pageSize");
+        console.log('pageSize = ' + pageSize);
+        	 action1.setCallback(this, function(response) {
+             	var state = response.getState();
+                if (state === "SUCCESS") {
+                	component.set("v.product", response.getReturnValue());
+                    component.set("v.totalSize", component.get("v.product").length);
+					component.set("v.start",0);
+					component.set("v.end",pageSize-1);
+					var paginationList = [];
+						for(var i=0; i< pageSize; i++)
+						{
+						paginationList.push(response.getReturnValue()[i]);
+						}
+					component.set('v.paginationList', paginationList);
+					console.log(paginationList);
+}
+           		
+              });
+        	 $A.enqueueAction(action1);
+	},*/
+    
+    modaleditOpen: function(component, event, helper) {
+        			var modal = component.find("productEditModal");
+        			var modalBackdrop = component.find("productEditModalBackdrop");
+        			$A.util.addClass(modal,"slds-fade-in-open");
+        			$A.util.addClass(modalBackdrop,"slds-backdrop slds-backdrop_open");
+                    var product = event.getSource().get('v.value');
+					component.set('v.editProduct0', product );
+	},
+     
+    modaleditClose: function(component, event, helper) {
+        			var modal = component.find("productEditModal");
+        			var modalBackdrop = component.find("productEditModalBackdrop");
+       				$A.util.removeClass(modal,"slds-fade-in-open");
+        			$A.util.removeClass(modalBackdrop,"slds-backdrop_open");
+	},
+    
+    searchProductByName: function(component, nameSegmentProd) {
+        			var action = component.get('c.nameSegmentProdBack');
+        			action.setParams({ "nameSegmentProdPar" : nameSegmentProd });
+        			action.setCallback(this, function(response) {
+            		var state = response.getState();
+            		if (state === "SUCCESS") {
+                        
+                		component.set('v.paginationList', response.getReturnValue());
+            		}
+                        else{
+                            return('v.newProduct');
+                        }
+        			});
+        			$A.enqueueAction(action);
+    },   
+    
+    editPr:function(component, event, helper){
+        	var action1 = component.get("c.updateNewProductTable");
+        		var proId = component.get("v.editProduct0");
+        		console.log('proId = ' + proId);
+        		action1.setParams({prodIds: proId});
+        		action1.setCallback(this, function(response) {
+            		var state = response.getState();
+            		if(state === 'SUCCESS') {
+                        var campings = component.get("v.paginationList");
+                				campings.push(response.getReturnValue());
+                				component.set('v.paginationList', campings);
+                  	}
+            	});
+        		var price= component.get("v.editProduct0.Price__c")
+        			if(price>=0){
+            			var amount= component.get("v.editProduct0.Amount__c");
+        				if(amount=0){
+            				var available=component.set("v.editProduct0.Available__c",false);
+        					}
+        				else (amount>0)
+                        	{
+            				var available=component.set("v.editProduct0.Available__c",true);
+        					}
+        		$A.enqueueAction(action1);
+                    }
+        if(price<0){
+            alert( "Wrong price." ); 
+        }
+    },
+
+    closeform: function (component,ser){
+        var elements = document.getElementsByClassName(ser);
+        	elements[0].style.display='none';
+    },
+    
+    openform: function (component,ser){
+        var elements = document.getElementsByClassName(ser);
+           		 elements[0].style.display = 'block';  
+    },
+    
+    deleteproduct: function (component, event){
+        		var product = event.getSource().get('v.value');
+				component.set('v.fordelete', product );
+        		var action = component.get("c.deleteProductTable");
+        		var todel = component.get("v.fordelete");
+        		console.log('todel = ' + todel);
+        		action.setParams({MydataId: todel});
+        		action.setCallback(this, function(response) {
+            		var state = response.getState();
+            		if(state === 'SUCCESS') {
+                         console.log('SUCCESS' );
+                        var campings = component.get("v.paginationList");
+                				campings.push(response.getReturnValue());
+                				component.set('v.paginationList', campings);
+                        
+                  	}
+            	});
+        		$A.enqueueAction(action);
+        
+    },
+    
+    handleChang:function (component,event){
+    var radioGrpValue = component.get("v.radioGrpValue");
+        component.set('v.namdate', radioGrpValue);
+        console.log('radioGrpValue',radioGrpValue);
+},
+    searchProductByDate: function(component, dateSegmentProd) {
+        			var action = component.get("c.dateSegmentProdBack");
+        			action.setParams({ "dateSegmentProdPar" : dateSegmentProd });
+        			action.setCallback(this, function(response) {
+            		var state = response.getState();
+            		if (state === "SUCCESS") {
+                        console.log('SUCCESS');
+                		component.set('v.paginationList', response.getReturnValue());
+            		}
+                        if (state != "SUCCESS") {
+                         alert( "Wrong format." ); 
+   
+                        }
+        			});
+        			$A.enqueueAction(action);
+    },   
+}
+	
+    
+    
+)
