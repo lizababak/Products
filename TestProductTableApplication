@@ -1,0 +1,88 @@
+@isTest
+public class TestProductTableApplication {
+
+    
+    @isTest 
+    static void insertdata(){
+       ProductTable__c testtrigger1 = new ProductTable__c(Name='testtrigger1',Amount__c=10,Available__c=false,AddedDate__c=Null);
+       insert testtrigger1;
+       ProductTable__c testtrigger2 = new ProductTable__c(Name='testtrigger2',Amount__c=0,Available__c=true,AddedDate__c=Null);
+       insert testtrigger2;
+        test.startTest();
+        ProductTableTriggerHelper.checkData(testtrigger1);
+        ProductTableTriggerHelper.checkAmount(testtrigger2);
+        test.stopTest();
+       System.assertEquals(datetime.now(), testtrigger1.AddedDate__c, 'Wrong');
+       System.assertEquals(testtrigger2.Available__c=false, testtrigger2.Available__c=false, 'Wrong');
+       
+    }
+    @isTest 
+    static void insertupdate(){
+       ProductTable__c testtrigger1 = new ProductTable__c(Amount__c=10,Available__c=false,AddedDate__c=Null);
+       insert testtrigger1;
+       testtrigger1.Amount__c=-10;
+       update testtrigger1;
+       ProductTable__c testtrigger11 = new ProductTable__c(Amount__c=0,Available__c=false,AddedDate__c=Null);
+       insert testtrigger11;
+       testtrigger11.Amount__c=20;
+       update testtrigger11;
+       test.startTest();
+       ProductTableTriggerHelper.checkAmount(testtrigger1);
+       ProductTableTriggerHelper.checkAmount(testtrigger11); 
+       test.stopTest();
+       System.assertEquals(testtrigger1.Available__c=true, testtrigger1.Available__c, 'Wrong');
+       System.assertEquals(testtrigger11.Available__c=false, testtrigger11.Available__c, 'Wrong');
+    }
+    //for controller
+    @isTest 
+    static void getdat(){
+      ProductTable__c testtrigger1 = new ProductTable__c(Amount__c=10,Available__c=false,AddedDate__c=Null);
+       insert testtrigger1;
+      Test.startTest();
+      ProductTableCmpController.getProductsDateASC();
+      ProductTableCmpController.getProductsDESC();
+      ProductTableCmpController.getProductsNameASK();
+      ProductTableCmpController.getProductsNameDESC();
+      ProductTableCmpController.getProductsPriceASK();
+      ProductTableCmpController.getProductsPriceDESK();
+      ProductTableCmpController.getProductsReleaseASK();
+      ProductTableCmpController.getProductsReleaseDESK();
+      ProductTableCmpController.getProducts();
+      test.stopTest();
+      System.assertNotEquals(testtrigger1,null, 'success');  
+ 
+    }
+    @isTest
+    static void newPr(){
+      ProductTable__c testtrigger1 = new ProductTable__c(Amount__c=10,Available__c=false,AddedDate__c=Null);
+       insert testtrigger1;
+      ProductTable__c testtrigger11 = new ProductTable__c(Amount__c=0,Available__c=false,AddedDate__c=Null);
+       insert testtrigger11;
+        test.startTest();
+      ProductTableCmpController.insertNewProductTable(testtrigger1);
+        test.stopTest();
+      System.assertNotEquals(testtrigger1,null, 'success');
+    }
+    @isTest
+    static void editPr(){
+      ProductTable__c testtrigger1 = new ProductTable__c(Amount__c=10,Available__c=false,AddedDate__c=Null);
+       insert testtrigger1;
+      testtrigger1.Amount__c=0;
+      update testtrigger1;
+        test.startTest();
+      ProductTableCmpController.updateNewProductTable(testtrigger1);
+        test.stopTest();
+      System.assertNotEquals(testtrigger1.Amount__c=0,testtrigger1.Amount__c=10, 'success');
+    }
+    
+    @isTest
+    static void delPr(){
+      ProductTable__c testtrigger1 = new ProductTable__c(Amount__c=10,Available__c=false,AddedDate__c=Null);
+       insert testtrigger1;
+        test.startTest();
+      ProductTableCmpController.deleteProductTable(testtrigger1);
+        test.stopTest();
+      System.assertNotEquals(null,testtrigger1, 'success');}  
+    
+
+}
