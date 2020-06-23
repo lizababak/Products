@@ -1,0 +1,291 @@
+<aura:component implements="flexipage:availableForRecordHome,force:appHostable,flexipage:availableForAllPageTypes" controller="ProductTableCmpController" access="global">
+     	<aura:attribute name="Mydata" type="ProductTable__c"/>
+	    <aura:attribute name="product" type="ProductTable__c[]"/>
+    	<aura:attribute name="fordelete" type="ProductTable__c"/>
+		<aura:attribute name="pageSize" type="Integer" default="5"/>
+    	<aura:attribute name="totalSize" type="Integer"/>
+		<aura:attribute name="start" type="Integer" />
+		<aura:attribute name="end" type="Integer"/>
+    	<aura:attribute name="select" type="String"/>
+    	<aura:attribute name="paginationList" type="ProductTable__c[]" />
+     	<aura:attribute name="nameForSearch" type="String"/>
+    	<aura:attribute name="editProduct0" type="ProductTable__c"
+                        default="{ 'sobjectType': 'ProductTable__c',
+                        'Name': '',
+                        'Amount__c': '',
+                        'Price__c': 0,
+                        'ProductType__c': 0,
+                        'ReleaseDate__c': '',
+                        'AddedDate__c':'',
+                        'Available__c': false }"/>
+   		<aura:attribute name="options" type="List" default="[
+        {'label': 'Search the product by Name', 'value': '1'},
+        {'label': 'find the product by date from...(example: 11/20/2019, 12:09 PM)', 'value': '2'}
+    ]"/>
+    <aura:attribute name="radioGrpValue" type="String" />
+    <aura:attribute name="namdate" type="String" />
+
+       	 	
+	<div class="slds-card slds-p-top--medium">
+        	<header class="slds-card__header">
+            	<h3 class="slds-text-heading--small">Product Table</h3>
+        	</header>
+        
+            <div>          
+    	<lightning:button label="Search form"
+                      		class="slds-m-top--medium"
+                      		variant="brand"
+                      		onclick="{!c.searchbutt}"
+                          iconName="utility:search"/>
+    		</div>
+     
+    <div id="search"  style="display:none;" class="search" >      
+    <div class="search1" >
+  	
+    <form class="slds-form--stacked">          
+    	<lightning:input aura:id="prodform" label="Search field" name="prodname"
+                          value="{!v.nameForSearch}"
+                             />
+  <lightning:radioGroup
+        aura:id="radioGrp"
+        name="radioButtonGroup"
+        label="Choose Your Option"
+        options="{! v.options }"
+        value="{! v.radioGrpValue }"
+        onchange="{! c.handleChange }"
+        class="customRadioCls"
+        required="true"
+    />      
+        <lightning:button label="Search" 
+                              class="slds-m-top--medium"
+                              variant="brand"
+                          onclick="{!c.searchByName}"/>
+        <lightning:button label="Close" 
+                              class="slds-m-top--medium"
+                              onclick="{!c.searchclose}"/>
+        </form>
+        </div>
+    </div>
+   <div>
+    
+
+    <lightning:accordion aura:id="accordion" >
+        <lightning:accordionSection name="A" label="Load table ordered by Added Datetime">
+            <aura:set attribute="body">
+                <lightning:button onclick="{!c.getProductDDesk}"
+                      	variant="brand"
+ 					  	label="Load table ordered by Added Datetime DESK"/>
+                <lightning:button onclick="{!c.getProductDAsk}"
+                      	variant="brand"
+ 					  	label="Load table ordered by Added Datetime ASK"/>
+            </aura:set>
+        </lightning:accordionSection>
+        <lightning:accordionSection name="B" label="Load table ordered by Name">
+                <lightning:button onclick="{!c.getProductNDesk}"
+                      	variant="brand"
+ 					  	label="Load table order by Name DESK"/>
+            <lightning:button onclick="{!c.getProductNAsk}"
+                      	variant="brand"
+ 					  	label="Load table order by Name ASK"/>
+        </lightning:accordionSection>
+        <lightning:accordionSection name="C" label="Load table ordered by Release Date">
+                <lightning:button onclick="{!c.getProductRDesk}"
+                      	variant="brand"
+ 					  	label="Load table order by Release Date DESK"/>
+            <lightning:button onclick="{!c.getProductRAsk}"
+                      	variant="brand"
+ 					  	label="Load table order by Release Date ASK"/>
+        </lightning:accordionSection>
+        <lightning:accordionSection name="C" label="Load table ordered by Price">
+          <lightning:button onclick="{!c.getProductPDesk}"
+                      	variant="brand"
+ 					  	label="Load table order by Price DESK"/> 
+            <lightning:button onclick="{!c.getProductPAsk}"
+                      	variant="brand"
+ 					  	label="Load table order by Price ASK"/>  
+        </lightning:accordionSection>
+    </lightning:accordion>
+    </div>        
+        	
+            <section class="slds-card__body">
+            	<div id="list" class="row">
+                    
+                    <tr > <td>Show</td><td style="width:10%"><ui:inputSelect aura:id="recordsplag" change="{!c.onSelectChange}">
+					<ui:inputSelectOption aura:id="input5" text="5" value="5"/>
+					<ui:inputSelectOption aura:id="input10" text="10" value="10"/>	
+					        </ui:inputSelect>
+                            </td>
+					</tr>
+                    
+                	<table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        				
+                        <thead>
+                        	<tr class="slds-line-hight_reset" >
+                        		<th class="slds-text-title_caps" scope="col">
+                            		<div class="slds-trucate" title="Name">Name</div>
+                            	</th>
+                        		<th class="slds-text-title_caps" scope="col">
+                                	<div class="slds-trucate" title="Amount">Amount</div>
+                            	</th>
+                        		<th class="slds-text-title_caps" scope="col">
+                                	<div class="slds-trucate" title="Price">Price</div>
+                            	</th>
+                        		<th class="slds-text-title_caps" scope="col">
+                                	<div class="slds-trucate" title="Product Type">Product Type</div>
+                            	</th>
+                        		<th class="slds-text-title_caps" scope="col">
+                                	<div class="slds-trucate" title="Release Date">Release Date</div>
+                            	</th>
+                            	<th class="slds-text-title_caps" scope="col">
+                                	<div class="slds-trucate" title="Available">Available</div>
+                            	</th>
+                            	<th class="slds-text-title_caps" scope="col">
+                                	<div class="slds-trucate" title=""></div>
+                            	</th>
+                        	</tr>
+        				</thead>                  
+        	<tbody>
+            	<aura:iteration items="{!v.paginationList}" var="rec">
+                    <tr class="slds-hint-parent">
+                        <td data-label="Name">
+                        	<div class="slds-trucate" aura:id="MydataIddel" title="Name">{!rec.Name}</div>
+                        </td>
+                        <td data-label="Amount">
+                            <div class="slds-trucate" title="Amount">{!rec.Amount__c}</div>
+                        </td>
+                        <td data-label="Price">
+                            <div class="slds-trucate" title="Price">{!rec.Price__c}</div>
+                        </td>
+                        <td data-label="Product Type">
+                            <div class="slds-trucate" title="Product Type">{!rec.ProductType__c}</div>
+                        </td>
+                        <td data-label="Release Date">
+                            <div class="slds-trucate" title="Release Date">{!rec.ReleaseDate__c}</div>
+                        </td>
+                        <td data-label="Available">
+                            <div class="slds-trucate" title="Available">
+                                <lightning:input type="checkbox" name="" checked='{!rec.Available__c}' disabled="true"/>
+                            </div>
+                        </td>                        
+                        <td data-label="Delete">
+                            <div class="slds-trucate" title="Delete">                          
+                                <lightning:button label="Delete" class="slds-m-top--medium" onclick="{!c.deleteprod}" iconName="utility:delete" value="{!rec}" /></div>
+                        </td>
+                        <td data-label="Edit">
+                            <div class="slds-trucate" title="Available">                         
+                                <lightning:button label="Edit" name="edit" aura:id="editProduct" class="slds-m-top--medium" onclick="{!c.openModaledit}" iconName="utility:edit" value="{!rec}"/></div>
+                        </td>
+                   </tr>
+            </aura:iteration>
+           	
+		   	<lightning:button label="Previous" disabled="{!v.start == 0}"  onclick="{!c.previous}" />
+		   	<lightning:button label="Next" disabled="{!v.end >= v.totalSize}" onclick="{!c.next}" />
+		     </tbody>
+       </table>
+       </div>
+	</section>
+</div>
+    
+    
+   <div class="slds-m-around_xx-large">
+        <section aura:id="productEditModal" role="dialog" tabindex="-1" aria-labelledby="productModalHeading" aria-modal="true" aria-describedby="contactModalBody" class="slds-modal">
+            	<div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon class="slds-modal__close" alternativeText="Close" iconName="utility:close" onclick="{!c.closeModaledit}" variant="bare-inverse" size="large">
+                    </lightning:buttonIcon>
+                    <h2 id="productModalHeading" class="slds-text-heading_medium slds-hyphenate">Edit Product</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="productModalBody">
+                    <lightning:input label="Name" value="{!v.editProduct0.Name}"/>
+                    <lightning:input type="number" label="Amount" step="1" value="{!v.editProduct0.Amount__c}"/>
+                    <lightning:input type="number" label="Price" step="0.1" min="0" value="{!v.editProduct0.Price__c}" messageWhenRangeUnderflow="Enter an amount that's at least $0."/>
+                    <lightning:select name="select" label="Select " value="{!v.editProduct0.ProductType__c}">
+        					<option value="">choose one...</option>
+        					<option value="1">1</option>
+        					<option value="2">2</option>
+        					<option value="3">3</option>
+        					<option value="4">4</option>
+        					<option value="5">5</option>
+                        	<option value="6">6</option>
+    				</lightning:select> 
+                    <lightning:input type="date"  label="Release Date" value="{!v.editProduct0.ReleaseDate__c}"/>
+                    <lightning:input type="Checkbox" aura:id="prodform" label="Available" name="proddesc" value="{!v.editProduct0.Available__c}"/>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning:button onclick="{!c.closeModaledit}" variant="neutral">Cancel</lightning:button>
+                    <lightning:button onclick="{!c.editProduct}" variant="brand" >Save</lightning:button>
+                </footer>
+            </div>
+        </section>
+        <div aura:id="productEditModalBackdrop" class="slds-backdrop"></div>
+    </div >
+    
+    
+    
+    <div>
+    	<lightning:button label="New"
+                      		class="slds-m-top--medium"
+                      		variant="brand"
+                      		onclick="{!c.formop}" />
+        
+    </div>
+    <aura:attribute name="newProduct" type="ProductTable__c"
+                default="{ 'sobjectType': 'ProductTable__c',
+                        'Name': '',
+                        'Amount__c': '',
+                        'Price__c': 0,
+                        'ProductType__c': 0,
+                        'ReleaseDate__c': '',
+                        'Added Date':'',
+                        'Available__c': false }"/>
+    <div id="insertDiv"  style="display:none;" class="new" >      
+    <div class="new1" >
+    <form class="slds-form--stacked">          
+            <lightning:input aura:id="prodform" label="Name"
+                             name="prodname"
+                             value="{!v.newProduct.Name}"
+                             />
+            <lightning:input type="number" aura:id="prodam" label="Amount"
+                             name="prodam"
+                             step="1"
+                             value="{!v.newProduct.Amount__c}"/> 
+            <lightning:input type="number" aura:id="prodform" label="Price"
+                             name="prodpri"
+                             min="0.1"
+                             step="0.1"
+                             formatter="currency"
+                             value="{!v.newProduct.Price__c}"
+                             messageWhenRangeUnderflow="Enter an amount that's at least $0.1."
+                             />
+        	<lightning:select aura:id="select10" name="select" label="Select "  value="{!v.newProduct.ProductType__c}">
+        					<option value="">choose one...</option>
+        					<option value="1">1</option>
+        					<option value="2">2</option>
+        					<option value="3">3</option>
+        					<option value="4">4</option>
+        					<option value="5">5</option>
+                			<option value="6">6</option>
+    		</lightning:select>                   
+            <lightning:input type="date" aura:id="prodform" label="Release Date"
+                             name="proddate"
+                             value="{!v.newProduct.ReleaseDate__c}"
+                             />
+            <lightning:input type="Checkbox" aura:id="prodform" label="Available"
+                             name="proddesc"
+                             value="{!v.newProduct.Available__c}"/>
+           <lightning:button label="Save" 
+                              class="slds-m-top--medium"
+                              variant="brand"
+                              onclick="{!c.insertNewProduct}"/>
+        <lightning:button label="Close" 
+                              class="slds-m-top--medium"
+                              onclick="{!c.forclose}"/>
+           </form>
+    </div>
+    </div>
+
+    
+    
+    
+
+</aura:component>
