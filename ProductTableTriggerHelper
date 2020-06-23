@@ -1,0 +1,24 @@
+public class ProductTableTriggerHelper {
+    public static void checkData(ProductTable__c actNew){
+				Datetime myDT = Datetime.now();
+                actNew.AddedDate__c = myDT;
+        if(actNew.Amount__c>0){
+         actNew.Available__c =true;   
+        }
+        else if(actNew.Amount__c<=0){
+            actNew.Available__c = false;    
+        }
+           
+    }
+    public static void checkAmount(ProductTable__c actNew){
+        Datetime myDT = Datetime.now();
+                actNew.AddedDate__c = myDT;
+         if(actNew.Amount__c>0){
+         actNew.Available__c =true;   
+        }
+        else if(actNew.Amount__c<=0){
+            actNew.Available__c = false;    
+        }
+    }
+
+}
