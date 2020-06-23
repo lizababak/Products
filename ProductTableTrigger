@@ -1,0 +1,11 @@
+trigger ProductTableTrigger on ProductTable__c (before insert, before update) {
+    if (Trigger.isInsert){
+           for(ProductTable__c actNew: trigger.new)
+      ProductTableTriggerHelper.checkData(actNew);
+
+    }
+    else if (Trigger.isUpdate){
+           for(ProductTable__c actNew: trigger.new)
+ 	ProductTableTriggerHelper.checkAmount(actNew);
+    }
+}
