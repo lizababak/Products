@@ -1,0 +1,210 @@
+({
+    getProductDDesk : function(component, event,helper) {
+        		 var selected=1;
+        		 component.set('v.select', selected);
+        		 
+        		 //var action1 = component.get("c.getProductsDESC");
+                 helper.getorder(component,selected);
+        		 //helper.getdata(component);
+	},
+    
+	getProductDAsk : function(component, event,helper) {
+        		 var selected=2;
+        		 component.set('v.select', selected);
+        		 //var action1 = component.get("c.getProductsDateASC");
+                 helper.getorder(component, selected);
+        		 //helper.getdata(component, action1);
+	},
+    
+    getProductRDesk : function(component, event,helper) {
+        		 var selected=3;
+        		 component.set('v.select', selected);
+        		 //var action1 = component.get("c.getProductsReleaseDESK");
+                 helper.getorder(component, selected);
+         		 //helper.getdata(component, action1);
+	},
+    
+    getProductRAsk : function(component, event,helper) {
+        		 var selected=4;
+        		 component.set('v.select', selected);
+        		 //var action1 = component.get("c.getProductsReleaseASK");
+                 helper.getorder(component, selected); 
+        		 //helper.getdata(component, action1);
+	},
+    
+    getProductNDesk : function(component, event,helper) {
+        		 var selected=5;
+        		 component.set('v.select', selected);
+        		 //var action1 = component.get("c.getProductsNameDESC");
+                 helper.getorder(component, selected); 
+        		 //helper.getdata(component, action1);
+	},
+    
+    getProductNAsk : function(component, event,helper) {
+        		 var selected=6;
+        		 component.set('v.select', selected);
+        		 //var action1 = component.get("c.getProductsNameASK");
+                 helper.getorder(component, selected); 
+        		 //helper.getdata(component, action1);
+	},
+    
+    getProductPDesk : function(component, event,helper) {
+        		 var selected=7;
+        		 component.set('v.select', selected);
+        		 //var action1 = component.get("c.getProductsPriceDESK");
+                 helper.getorder(component,selected); 
+        		 //helper.getdata(component, action1);
+	},
+    
+    getProductPAsk : function(component, event,helper) {
+        		 var selected=8;
+        		 component.set('v.select', selected);
+        		 //var action1 = component.get("c.getProductsPriceASK");
+                 helper.getorder(component, selected);
+        		 //helper.getdata(component, action1);
+	},
+	
+   
+    insertNewProduct :function(component, event,helper){
+        		helper.createProduct(component, event);
+        		//var action1 = component.get("c.getProducts"); 
+       			helper.getorder(component);                   
+    },
+    
+    
+    formop: function(component, event, helper){
+        	
+        var elements = document.getElementsByClassName("new");
+        	elements[0].style.display='block';
+        
+	},
+    
+    forclose: function(component, event, helper){
+        	
+        var elements = document.getElementsByClassName("new");
+        	elements[0].style.display='none';
+	},
+    
+    searchbutt : function(component,event,helper){
+        	
+        var elements = document.getElementsByClassName("search");
+        	elements[0].style.display='block';
+	},
+    
+    searchclose : function(component,event, helper){
+        	
+        var elements = document.getElementsByClassName("search");
+        	elements[0].style.display='none';
+	},
+    
+    
+    editProduct: function(component, event, helper){
+           		helper.editPr(component, event, helper);
+           		//var action1 = component.get("c.getProducts");
+       		    helper.getorder(component);  
+            	helper.modaleditClose(component, event, helper);
+	},
+    
+    openModaledit: function(component, event, helper) {
+        		   helper.modaleditOpen(component, event);    
+	},
+    
+    closeModaledit: function(component, event, helper) {
+        			helper.modaleditClose(component, event, helper);    
+	},
+        
+	deleteprod: function (component,event,helper) {
+       helper.deleteproduct(component, event); 
+       //var action1 = component.get("c.getProducts");
+       helper.getorder(component);    
+	},
+    
+     searchByName: function(component, event, helper) {
+         var nd=component.get("v.namdate");
+         console.log('Search:' + nd);
+         if (nd==1){
+             var nameSegmentProd = component.get("v.nameForSearch");
+             if (nameSegmentProd==null||nameSegmentProd==undefined){
+             return('v.newProduct'); 
+             }
+             helper.searchProductByName(component, nameSegmentProd);
+             console.log('Search:' + nameSegmentProd);
+         }
+         if(nd==2){
+             var dateSegmentProd = component.get("v.nameForSearch");
+             if (dateSegmentProd==null||dateSegmentProd==undefined){
+             return('v.newProduct');}
+             console.log('Search:' + dateSegmentProd);
+             helper.searchProductByDate(component, dateSegmentProd);
+         }
+         else {
+           return('v.newProduct');  
+         }
+        
+   },
+    
+	onSelectChange : function(component, event, helper) {
+		var selected = component.find("recordsplag").get("v.value");
+		var paginationList = [];
+		var prodList = component.get("v.product");
+		for(var i=0; i< selected; i++)
+		{
+		paginationList.push(prodList[i]);
+		}
+        component.set('v.paginationList', paginationList);
+        
+},
+	handleChange : function(component, event, helper) {
+        helper.handleChang(component,event);
+        
+},
+	next : function(component, event, helper){
+        var prodList = component.get("v.product");
+		var end = component.get("v.end");
+		var start = component.get("v.start");
+		var pageSize = component.get("v.pageSize");
+        var paginationList = [];
+		var counter = 0;
+		for(var i=end+1; i<end+pageSize+1; i++)
+		{
+		if(prodList.length > end)
+		{
+		paginationList.push(prodList[i]);
+		counter ++ ;
+		}
+		}
+		start = start + counter;
+		end = end + counter;
+		component.set('v.paginationList', paginationList);
+		component.set("v.start",start);
+		component.set("v.end",end);
+        
+},
+
+	previous : function(component, event, helper){
+        var prodList = component.get("v.product");
+		var end = component.get("v.end");
+		var start = component.get("v.start");
+		var pageSize = component.get("v.pageSize");
+		var paginationList = [];
+		var counter = 0;
+		for(var i= start-pageSize; i < start ; i++)
+		{
+		if(i > -1)
+		{
+		paginationList.push(prodList[i]);
+		counter ++;
+		}
+		else {
+		start++;
+		}
+		}
+		start = start-counter;
+		end = end-counter;
+	    component.set('v.paginationList', paginationList);
+		component.set("v.start",start);
+     	component.set("v.end",end);         	
+},
+    
+    
+})
