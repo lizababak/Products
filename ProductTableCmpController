@@ -1,0 +1,108 @@
+public class ProductTableCmpController {
+    @AuraEnabled
+    public static List<ProductTable__c>getProducts(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					 ];
+        return product;
+    }
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsDESC(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY AddedDate__c DESC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsDateASC(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY AddedDate__c ASC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsNameDESC(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY Name DESC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsNameASK(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY Name ASC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsReleaseASK(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY ReleaseDate__c ASC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsReleaseDESK(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY ReleaseDate__c DESC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsPriceASK(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY Price__c ASC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c>getProductsPriceDESK(){
+        List<ProductTable__c> product=[SELECT Id, Name,Amount__c,Price__c,ProductType__c,ReleaseDate__c,Available__c,AddedDate__c	
+                					   FROM ProductTable__c 
+                					   ORDER BY Price__c DESC];
+        return product;
+    }
+    
+    @AuraEnabled
+    public static ProductTable__c insertNewProductTable(ProductTable__c productnew) {
+        upsert productnew;
+        return productnew;
+    }
+    
+    @AuraEnabled
+    public static ProductTable__c updateNewProductTable(ProductTable__c prodIds) {
+        update prodIds;
+        return prodIds;
+    }
+       
+    @AuraEnabled
+    public static ProductTable__c  deleteProductTable (ProductTable__c MydataId) {
+        delete MydataId;
+        return MydataId;
+    }
+        
+     @AuraEnabled
+    public static List<ProductTable__c> nameSegmentProdBack (String nameSegmentProdPar) {
+        String nameSegmentProdSoql = '%' + nameSegmentProdPar + '%';
+        return [SELECT Name, Amount__c, Price__c, ProductType__c, ReleaseDate__c, Available__c,AddedDate__c 
+                FROM ProductTable__c 
+                WHERE Name LIKE:nameSegmentProdSoql ];
+    }
+    
+    @AuraEnabled
+    public static List<ProductTable__c> dateSegmentProdBack(string dateSegmentProdPar) {
+        Datetime dttm1=DateTime.parse(dateSegmentProdPar);
+        return [SELECT Name, Amount__c, Price__c, ProductType__c, ReleaseDate__c, Available__c,AddedDate__c 
+                FROM ProductTable__c 
+                WHERE  AddedDate__c>:dttm1  ];
+    }
+    
+    
+}
